@@ -221,7 +221,7 @@ public class Homework {
             rateProduct("Дюбель", "2");
             rateProduct("Дюбель", "2");
 
-        } catch (Exception e) {
+        } catch (InvalidRatingException e) {
             System.out.println(e.getMessage());
         }
         List<String> products = new ArrayList<>(ratingNote.keySet());
@@ -403,7 +403,7 @@ public class Homework {
         int localRate;
         try {
             localRate = Integer.parseInt(rating);
-            if (localRate < 0 || localRate > 5) {
+            if (localRate < 1 || localRate > 5) {
                 throw new InvalidRatingException(localRate);
             }
             ratingNote.get(product).add(localRate);

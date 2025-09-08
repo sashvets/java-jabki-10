@@ -73,7 +73,7 @@ public class Homework {
         str = " ";
         try {
             checkEmpty(str);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
 
@@ -94,7 +94,7 @@ public class Homework {
          */
         try {
             setAge(-10);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
 
@@ -120,7 +120,7 @@ public class Homework {
         try {
             System.out.printf("Товар по коду %s : %s\n", item1, getItem(item1));
             System.out.printf("Товар по коду %s : %s\n", item1, getItem(item2));
-        } catch (Exception e) {
+        } catch (ItemNotFoundException e) {
             System.out.println(e.getMessage());
         }
 
@@ -140,22 +140,22 @@ public class Homework {
          */
         try {
             login("_JavaUser", "123456");
-        } catch (Exception e) {
+        } catch (LoginFailedException e) {
             System.out.println(e.getMessage());
         }
         try {
             login("   ", "_123456");
-        } catch (Exception e) {
+        } catch (LoginFailedException e) {
             System.out.println(e.getMessage());
         }
         try {
             login("JavaUser", "123456");
-        } catch (Exception e) {
+        } catch (LoginFailedException e) {
             System.out.println(e.getMessage());
         }
         try {
             login("PascalUser", "654321");
-        } catch (Exception e) {
+        } catch (LoginFailedException e) {
             System.out.println(e.getMessage());
         }
 
@@ -166,34 +166,32 @@ public class Homework {
          *  - выбрасывает InsufficientBalanceException, если баланс отправителя меньше суммы
          *  - содержит try-catch в main
          */
-        accounts.put("JavaUser", 1000.00);
-        accounts.put("PascalUser", 0.00);
-        accounts.put("PythonUser", 15.00);
+        transfer("JavaUser", "PascalUser", 500.00);
+        transfer("PythonUser", "JavaUser", 10.00);
+        transfer("PascalUser", "PythonUser", 250.00);
         try {
-            transfer("JavaUser", "PascalUser", 500.00);
-            transfer("PythonUser", "JavaUser", 10.00);
-            transfer("PascalUser", "PythonUser", 250.00);
-        } catch (Exception e) {
+            transfer("JavaUser", "PascalUser", 2000.00);
+        } catch (InsufficientBalanceException e) {
             System.out.println(e.getMessage());
         }
         try {
             transfer("PascalUser", "PythonUser", 0.00);
-        } catch (Exception e) {
+        } catch (InvalidTransferAmountException e) {
             System.out.println(e.getMessage());
         }
         try {
             transfer("PascalUser", "PythonUser", -10.00);
-        } catch (Exception e) {
+        } catch (InvalidTransferAmountException e) {
             System.out.println(e.getMessage());
         }
         try {
             transfer("", "PythonUser", 250.00);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
         try {
             transfer("PascalUser", " ", 250.00);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
         accounts.forEach((name, balance) ->
@@ -366,7 +364,7 @@ public class Homework {
      * - содержит try-catch в main
      */
     public static void transfer(String fromAccount, String toAccount, double amount) {
-        if (fromAccount == null || toAccount == null) {
+        if (fromAccount == null || toAccount == null || fromAccount.isBlank() || toAccount.isBlank()) {
             throw new IllegalArgumentException("Для перевода необходимо ввести как отправителя так и получателя");
         }
         if (!accounts.containsKey(fromAccount)) {
@@ -408,7 +406,7 @@ public class Homework {
             }
             ratingNote.get(product).add(localRate);
         } catch (NumberFormatException e) {
-            System.out.printf("Оценка (%s) товара только в числах\n", rating);
+            System.out.printf("Оценка товара должна быть числовым значением (введено: %s)\n", rating);
         }
     }
 }

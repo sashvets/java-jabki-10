@@ -131,10 +131,10 @@ class HomeworkTest {
         exception = Assertions.assertThrows(IllegalArgumentException.class, () -> main.Homework.rateProduct("Опилки", "10"));
         Assertions.assertEquals("Товар не найден: Опилки", exception.getMessage());
         exception = Assertions.assertThrows(InvalidRatingException.class, () -> main.Homework.rateProduct("Цемент", "10"));
-        Assertions.assertEquals("Рейтинг (10) может принимать значение от 1 до 5", exception.getMessage());
+        Assertions.assertEquals("Значение рейтинга должно быть в диапазоне от 1 до 5 (указано: 10)", exception.getMessage());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
         Assertions.assertDoesNotThrow(() -> main.Homework.rateProduct("Цемент", "орпорп"));
-        Assertions.assertEquals("Оценка (орпорп) товара только в числах", outputStream.toString().trim());
+        Assertions.assertEquals("Оценка товара должна быть числовым значением (введено: орпорп)", outputStream.toString().trim());
     }
 }
